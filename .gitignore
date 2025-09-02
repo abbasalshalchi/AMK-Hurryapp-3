@@ -8,6 +8,7 @@
 !*.html
 
 # and except these files
-!requirements.txt
 !.gitignore
+!.gitkeep
+!requirements.txt
 !README.md
