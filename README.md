@@ -1,3 +1,3 @@
-## AMK-Hurryapp-3
+## Introduction
 
-This is a repository used to store the projects & quizes made for the **Hurryapp 3 Hackathon**.  
+This is a repository used to store the project made for the **Hurryapp 3 Hackathon**.  
