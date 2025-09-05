@@ -1,14 +1,3 @@
-# ignore all files
-*.*
-
-# except source code files
-!*.py
-!*.js
-!*.css
-!*.html
-
-# and except these files
-!.gitignore
-!.gitkeep
-!requirements.txt
-!README.md
+external
+python_ai_environment
+*.pdf
