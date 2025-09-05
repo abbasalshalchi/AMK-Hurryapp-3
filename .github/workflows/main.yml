@@ -1,37 +1,48 @@
-# A workflow to automatically sync a fork with its upstream repository.
+# This is a basic workflow to keep a fork updated.
+
 name: Sync Fork
 
-# Controls when the workflow will run
+# Controls when the action will run.
 on:
-  schedule:
-    # Runs the workflow every hour. You can change this using cron syntax.
-    # For example, '0 0 * * *' would run it once a day at midnight.
-    - cron: '0 * * * *'
-  workflow_dispatch:
-    # Adds a button to the Actions tab to run this workflow manually.
-
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+  repository_dispatch:
+    types: [update-fork] # Listens for a specific custom event
+  workflow_dispatch: # Allows manual runs
 jobs:
   sync:
-    # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # This action syncs a fork with its upstream repository.
-      - name: Sync Fork with Upstream
-        uses: tgymnich/fork-sync-with-upstream@v1.4.0
+      - name: Checkout Fork
+        uses: actions/checkout@v4
         with:
-          # The repository to sync with.
-          # For example, if you forked 'original-owner/original-repo',
-          # this should be 'original-owner/original-repo'.
-          upstream_repository: 'AliMustafa731/AMK-Hurryapp-3'
+          # We must use a Personal Access Token here to allow the Action to push commits.
+          # The GITHUB_TOKEN has read-only permissions and cannot trigger other workflows.
+          token: ${{ secrets.GITHUB_TOKEN }}
+          # Fetch all history for all branches and tags
+          fetch-depth: 0
 
-          # The branch in your fork to update.
-          target_branch: 'main'
+      - name: Configure Git
+        run: |
+          git config --global user.name 'GitHub Actions Sync'
+          git config --global user.email 'actions@github.com'
 
-          # The branch from the upstream repository to pull changes from.
-          upstream_branch: 'main'
+      - name: Add Upstream Remote
+        run: git remote add upstream https://github.com/AliMustafa731/AMK-Hurryapp-3.git
 
-          # Your GitHub token. GITHUB_TOKEN is a special secret that GitHub provides.
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Fetch Upstream
+        run: git fetch upstream
+
+      - name: Merge Upstream Changes
+        run: |
+          # Get the default branch name of the fork
+          DEFAULT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+          echo "Default branch is $DEFAULT_BRANCH"
+          
+          # Merge changes from the upstream's corresponding branch
+          git merge "upstream/$DEFAULT_BRANCH" --ff-only || (
+            echo "Fast-forward merge failed. A manual merge may be required."
+            exit 1
+          )
+
+      - name: Push Changes
+        run: git push origin
