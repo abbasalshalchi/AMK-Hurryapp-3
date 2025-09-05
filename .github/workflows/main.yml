@@ -1,0 +1,37 @@
+# A workflow to automatically sync a fork with its upstream repository.
+name: Sync Fork
+
+# Controls when the workflow will run
+on:
+  schedule:
+    # Runs the workflow every hour. You can change this using cron syntax.
+    # For example, '0 0 * * *' would run it once a day at midnight.
+    - cron: '0 * * * *'
+  workflow_dispatch:
+    # Adds a button to the Actions tab to run this workflow manually.
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  sync:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # This action syncs a fork with its upstream repository.
+      - name: Sync Fork with Upstream
+        uses: tgymnich/fork-sync-with-upstream@v1.4.0
+        with:
+          # The repository to sync with.
+          # For example, if you forked 'original-owner/original-repo',
+          # this should be 'original-owner/original-repo'.
+          upstream_repository: 'AliMustafa731/AMK-Hurryapp-3'
+
+          # The branch in your fork to update.
+          target_branch: 'main'
+
+          # The branch from the upstream repository to pull changes from.
+          upstream_branch: 'main'
+
+          # Your GitHub token. GITHUB_TOKEN is a special secret that GitHub provides.
+          github_token: ${{ secrets.GITHUB_TOKEN }}
