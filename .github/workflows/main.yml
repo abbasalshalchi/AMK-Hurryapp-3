@@ -37,17 +37,14 @@ jobs:
       - name: Fetch Upstream
         run: git fetch upstream
 
-      - name: Merge Upstream Changes
+      - name: Rebase on Upstream
         run: |
-          # Get the default branch name of the fork
           DEFAULT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
           echo "Default branch is $DEFAULT_BRANCH"
-          
-          # Merge changes from the upstream's corresponding branch
-          git merge "upstream/$DEFAULT_BRANCH" --ff-only || (
-            echo "Fast-forward merge failed. A manual merge may be required."
-            exit 1
-          )
+          # Rebase our branch on top of the upstream's branch
+          git rebase "upstream/$DEFAULT_BRANCH"
 
       - name: Push Changes
-        run: git push origin
+        run: |
+          # We must force push because we rebased the history
+          git push origin --force
