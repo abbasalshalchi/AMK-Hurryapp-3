@@ -1,52 +1,52 @@
-# This is a basic workflow to keep a fork updated.
+# # This is a basic workflow to keep a fork updated.
 
-name: Sync Fork
+# name: Sync Fork
 
-# Controls when the action will run.
-#on:
-#  repository_dispatch:
-#    types: [update-fork] # Listens for a specific custom event
-#  workflow_dispatch: # Allows manual runs
-on:
-  schedule:
-    # Runs the workflow every 5 minutes
-    - cron: '*/6 * * * *'
-  workflow_dispatch: # Keep this for manual runs
-jobs:
-  sync:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
+# # Controls when the action will run.
+# #on:
+# #  repository_dispatch:
+# #    types: [update-fork] # Listens for a specific custom event
+# #  workflow_dispatch: # Allows manual runs
+# on:
+#   schedule:
+#     # Runs the workflow every 5 minutes
+#     - cron: '*/6 * * * *'
+#   workflow_dispatch: # Keep this for manual runs
+# jobs:
+#   sync:
+#     runs-on: ubuntu-latest
+#     permissions:
+#       contents: write
       
-    steps:
-      - name: Checkout Fork
-        uses: actions/checkout@v4
-        with:
-          # We must use a Personal Access Token here to allow the Action to push commits.
-          # The GITHUB_TOKEN has read-only permissions and cannot trigger other workflows.
-          token: ${{ secrets.GITHUB_TOKEN }}
-          # Fetch all history for all branches and tags
-          fetch-depth: 0
+#     steps:
+#       - name: Checkout Fork
+#         uses: actions/checkout@v4
+#         with:
+#           # We must use a Personal Access Token here to allow the Action to push commits.
+#           # The GITHUB_TOKEN has read-only permissions and cannot trigger other workflows.
+#           token: ${{ secrets.GITHUB_TOKEN }}
+#           # Fetch all history for all branches and tags
+#           fetch-depth: 0
 
-      - name: Configure Git
-        run: |
-          git config --global user.name 'GitHub Actions Sync'
-          git config --global user.email 'actions@github.com'
+#       - name: Configure Git
+#         run: |
+#           git config --global user.name 'GitHub Actions Sync'
+#           git config --global user.email 'actions@github.com'
 
-      - name: Add Upstream Remote
-        run: git remote add upstream https://github.com/AliMustafa731/AMK-Hurryapp-3.git
+#       - name: Add Upstream Remote
+#         run: git remote add upstream https://github.com/AliMustafa731/AMK-Hurryapp-3.git
 
-      - name: Fetch Upstream
-        run: git fetch upstream
+#       - name: Fetch Upstream
+#         run: git fetch upstream
 
-      - name: Rebase on Upstream
-        run: |
-          DEFAULT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
-          echo "Default branch is $DEFAULT_BRANCH"
-          # Rebase our branch on top of the upstream's branch
-          git rebase "upstream/$DEFAULT_BRANCH"
+#       - name: Rebase on Upstream
+#         run: |
+#           DEFAULT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+#           echo "Default branch is $DEFAULT_BRANCH"
+#           # Rebase our branch on top of the upstream's branch
+#           git rebase "upstream/$DEFAULT_BRANCH"
 
-      - name: Push Changes
-        run: |
-          # We must force push because we rebased the history
-          git push origin --force
+#       - name: Push Changes
+#         run: |
+#           # We must force push because we rebased the history
+#           git push origin --force
