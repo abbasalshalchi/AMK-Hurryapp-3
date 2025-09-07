@@ -1,2 +1,5 @@
-flask_socketio
 flask
+flask-socketio
+flask-cors
+gunicorn
+eventlet
