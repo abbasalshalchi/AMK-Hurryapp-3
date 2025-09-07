@@ -13,7 +13,7 @@ def register_http(app):
         process an image sent by the user
     '''
     @app.route("/images/process/", methods=["POST"])
-    def handle_process_image(img):
+    def handle_process_image():
 
         # the image is expected to be sent in the body of the request as raw binary bytes of a JPEG image
         img_data = request.data
