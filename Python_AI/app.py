@@ -4,8 +4,8 @@ from flask import Flask, request
 from flask_socketio import SocketIO
 from flask_cors import CORS
 
-from .http_server import register_http
-from .websocket_server import register_websocket
+from http_server import register_http
+from websocket_server import register_websocket
 
 # 2. Configure basic logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
