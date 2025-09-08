@@ -59,5 +59,6 @@ print(">>> Websocket handlers registered")
 '''
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
-    print(f">>> Running locally on http://0.0.0.0:{port}")
-    socketio.run(app, debug=True, allow_unsafe_werkzeug=True, port=port)
+    print(f">>> Running on http://0.0.0.0:{port}")
+    # Use eventlet or gevent for production
+    socketio.run(app, host="0.0.0.0", port=port)
