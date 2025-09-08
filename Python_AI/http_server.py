@@ -27,4 +27,4 @@ def register_http(app):
         fake function that applies computer vision or AI processing on the image, and returns the detetction result
     '''
     def process_image(img):
-        return {"Detections": [1, 2, 3, 4]}
+        return {"Detections": [2, 2, 3, 4]}
