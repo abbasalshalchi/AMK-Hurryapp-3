@@ -1,6 +1,7 @@
 # 1. Import necessary modules
 import logging
-from flask import Flask, request
+import os
+from flask import Flask, request, jsonify
 from flask_socketio import SocketIO
 from flask_cors import CORS
 
@@ -9,6 +10,9 @@ from websocket_server import register_websocket
 
 # 2. Configure basic logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
+# Debug: mark import start
+print(">>> Starting Flask-SocketIO app import...")
 
 # Create app + socketio
 app = Flask(__name__)
@@ -20,6 +24,8 @@ CORS(app)
 # Enable CORS for Websockets
 socketio = SocketIO(app, cors_allowed_origins="*")
 
+# Debug: confirm app and socketio created
+print(">>> Flask app and SocketIO initialized")
 
 # 3. Add a logging middleware for all requests
 @app.after_request
@@ -31,10 +37,17 @@ def log_request_info(response):
     )
     return response
 
+# 4. Add health check route (important for Railway)
+@app.route("/healthz")
+def healthz():
+    return jsonify({"status": "ok"}), 200
 
 # Initialize routes and websocket handlers (register them)
 register_http(app)
+print(">>> HTTP routes registered")
+
 register_websocket(socketio)
+print(">>> Websocket handlers registered")
 
 '''
     Main Entry
@@ -42,4 +55,6 @@ register_websocket(socketio)
     local dev only (Railway will use Gunicorn instead)
 '''
 if __name__ == '__main__':
-    socketio.run(app, debug=True, allow_unsafe_werkzeug=True)
+    port = int(os.environ.get("PORT", 5000))
+    print(f">>> Running locally on http://0.0.0.0:{port}")
+    socketio.run(app, debug=True, allow_unsafe_werkzeug=True, port=port)
