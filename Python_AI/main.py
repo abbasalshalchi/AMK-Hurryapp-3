@@ -8,9 +8,6 @@ from flask_cors import CORS
 from http_server import register_http
 from websocket_server import register_websocket
 
-import eventlet
-eventlet.spawn_after(30, lambda: print(">>> Heartbeat alive"))
-
 # 2. Configure basic logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
