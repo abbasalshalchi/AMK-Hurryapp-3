@@ -12,7 +12,7 @@ register_http(app)
 def healthz():
     return jsonify({"status": "ok"}), 200
 
-# This is your root route from http_server.py
+# This is your root route from http_server.py t
 @app.route('/')
 def handle_root():
     # We will return a simple JSON response instead of rendering a template
