@@ -5,10 +5,6 @@ from flask import render_template, jsonify, request
     HTTP API Endpoints
 '''
 def register_http(app):
-    @app.route('/')
-    def handle_root():
-        return render_template('index.html')
-
     '''
         process an image sent by the user
     '''
