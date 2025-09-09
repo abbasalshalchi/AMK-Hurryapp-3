@@ -1,69 +1,22 @@
-# 1. Import necessary modules
-import logging
 import os
-from flask import Flask, request, jsonify
-from flask_socketio import SocketIO
-from flask_cors import CORS
+from flask import Flask, jsonify, render_template
 
-from http_server import register_http
-from websocket_server import register_websocket
-
-# 2. Configure basic logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-
-# Debug: mark import start
-print(">>> Starting Flask-SocketIO app import...")
-
-# Create app + socketio
+# Create app
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'your_secret_key'
 
-# Enable CORS for HTTP routes
-CORS(app)
-
-# Enable CORS for Websockets
-socketio = SocketIO(app, cors_allowed_origins="*")
-
-# Debug: confirm app and socketio created
-print(">>> Flask app and SocketIO initialized")
-
-# 3. Add a logging middleware for all requests
-@app.after_request
-def log_request_info(response):
-    """Logs information about each request."""
-    app.logger.info(
-        f'Request: {request.method} {request.path} - '
-        f'Status: {response.status_code}'
-    )
-    return response
-
-# 4. Add health check route (important for Railway)
+# This is your health check route from your original main.py
 @app.route("/healthz")
 def healthz():
     return jsonify({"status": "ok"}), 200
 
-# Initialize routes and websocket handlers (register them)
-register_http(app)
-print(">>> HTTP routes registered")
+# This is your root route from http_server.py
+@app.route('/')
+def handle_root():
+    # We will return a simple JSON response instead of rendering a template
+    # to avoid needing the /templates folder for this test.
+    return jsonify({"message": "Minimal app is running!"})
 
-# register_websocket(socketio)
-# print(">>> Websocket handlers registered")
-print(">>> Websocket handlers temporarily disabled")
-
-'''
-    Main Entry
-
-    local dev only (Railway will use Gunicorn instead)
-'''
-# if __name__ == '__main__':
-#     port = int(os.environ.get("PORT", 5000))
-#     print(f">>> Running on http://0.0.0.0:{port}")
-#     # Use eventlet or gevent for production
-#     socketio.run(app, host="0.0.0.0", port=port)
-
+# This is the standard run block for local development
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
-    print(f">>> Running on http://0.0.0.0:{port}")
-    # Use eventlet or gevent for production
-    # socketio.run(app, host="0.0.0.0", port=port)
-    app.run(host="0.0.0.0", port=port) # Use standard Flask run for this test
+    app.run(host="0.0.0.0", port=port)
