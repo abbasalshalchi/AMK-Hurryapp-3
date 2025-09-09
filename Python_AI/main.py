@@ -46,16 +46,24 @@ def healthz():
 register_http(app)
 print(">>> HTTP routes registered")
 
-register_websocket(socketio)
-print(">>> Websocket handlers registered")
+# register_websocket(socketio)
+# print(">>> Websocket handlers registered")
+print(">>> Websocket handlers temporarily disabled")
 
 '''
     Main Entry
 
     local dev only (Railway will use Gunicorn instead)
 '''
+# if __name__ == '__main__':
+#     port = int(os.environ.get("PORT", 5000))
+#     print(f">>> Running on http://0.0.0.0:{port}")
+#     # Use eventlet or gevent for production
+#     socketio.run(app, host="0.0.0.0", port=port)
+
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
     print(f">>> Running on http://0.0.0.0:{port}")
     # Use eventlet or gevent for production
-    socketio.run(app, host="0.0.0.0", port=port)
+    # socketio.run(app, host="0.0.0.0", port=port)
+    app.run(host="0.0.0.0", port=port) # Use standard Flask run for this test
