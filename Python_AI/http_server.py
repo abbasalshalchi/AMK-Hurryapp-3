@@ -6,6 +6,20 @@ from flask import render_template, jsonify, request
 '''
 def register_http(app):
     '''
+        Health check route
+    '''
+    @app.route("/healthz")
+    def healthz():
+        return jsonify({"status": "ok"}), 200
+    
+    '''
+        Root route
+    '''
+    @app.route('/')
+    def handle_root():
+        return render_template('index.html')
+    
+    '''
         process an image sent by the user
     '''
     @app.route("/images/process/", methods=["POST"])
