@@ -17,7 +17,7 @@ def healthz():
 def handle_root():
     # We will return a simple JSON response instead of rendering a template
     # to avoid needing the /templates folder for this test.
-    return jsonify({"message": "Minimal app is running!"})
+    return render_template('index.html')
 
 # This is the standard run block for local development
 if __name__ == '__main__':
