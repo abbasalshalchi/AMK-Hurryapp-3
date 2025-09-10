@@ -1,2 +1,5 @@
 flask>=2.0.0
+flask_socketio
 gunicorn>=20.1.0
+opencv-python
+pandas

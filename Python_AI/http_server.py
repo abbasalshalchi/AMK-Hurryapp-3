@@ -1,5 +1,7 @@
 
-from flask import render_template, jsonify, request
+from flask import render_template, jsonify, request, Response
+import cv2
+import numpy as np
 
 '''
     HTTP API Endpoints
@@ -20,21 +22,27 @@ def register_http(app):
         return render_template('index.html')
     
     '''
-        process an image sent by the user
+        Process an image sent by the user
     '''
     @app.route("/images/process/", methods=["POST"])
     def handle_process_image():
-
         # the image is expected to be sent in the body of the request as raw binary bytes of a JPEG image
         img_data = request.data
 
-        # do some AI stuff with the image
-        detection_result = process_image(img_data)
+        # Convert bytes → numpy array → OpenCV image
+        nparr = np.frombuffer(img_data, np.uint8)
+        img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
 
-        return jsonify(detection_result)
+        if img is None:
+            return jsonify({"error": "Invalid image"}), 400
 
-    '''
-        fake function that applies computer vision or AI processing on the image, and returns the detetction result
-    '''
-    def process_image(img):
-        return {"Detections": [2, 2, 3, 4]}
+        # Convert to grayscale
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+        # Encode grayscale image back to JPEG
+        success, encoded_img = cv2.imencode(".jpg", gray)
+        if not success:
+            return jsonify({"error": "Failed to encode image"}), 500
+
+        # Return JPEG as response
+        return Response(encoded_img.tobytes(), mimetype="image/jpeg")
