@@ -1,3 +1,4 @@
 external
-python_ai_environment
+python_ai_env
+__pycache__
 *.pdf
